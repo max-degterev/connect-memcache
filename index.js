@@ -14,12 +14,13 @@ var extend = function(result, source) {
 
   return result;
 };
+var noop = function() {};
 
 var defaults = {
   host: '127.0.0.1',
   port: '11211',
   prefix: 'sess:',
-  maxAge: 86400 // one day
+  ttl: 60 * 60 * 24 * 29
 };
 
 /**
@@ -52,13 +53,12 @@ module.exports = function(connect) {
 
   var MemcacheStore = function(options) {
     var _this = this;
+    Store.call(this, options);
 
     options = extend(options || {}, defaults);
 
     this.prefix = null || options.prefix;
-    this.ttl = options.maxAge;
-
-    Store.call(this, options);
+    this.ttl = options.ttl;
 
     if (!this.client) {
       this.client = new memcache.Client(options.port, options.host, options);
@@ -81,19 +81,24 @@ module.exports = function(connect) {
    */
 
   MemcacheStore.prototype.get = function(sid, fn) {
+    var _this = this;
     sid = this.prefix + sid;
 
     this.client.get(sid, function(err, data) {
       if (err) return fn(err);
       if (!data) return fn();
 
-      var result;
+      var sess;
 
       try {
-        result = JSON.parse(data.toString());
+        sess = JSON.parse(data.toString());
       } catch (err) { fn(err); }
 
-      fn(null, result);
+      if (sess && sess.__expires__ && sess.__expires__ > Date.now() + _this.ttl * 1000) {
+        _this.client.set(sid, JSON.stringify(sess), noop, _this.ttl);
+      }
+
+      fn(null, sess);
     });
   };
 
@@ -109,14 +114,14 @@ module.exports = function(connect) {
   MemcacheStore.prototype.set = function(sid, sess, fn) {
     sid = this.prefix + sid;
     try {
-      var maxAge = sess.cookie.maxAge || sess.cookie.originalMaxAge,
-          ttl = typeof maxAge === 'number' ? (maxAge / 1000 | 0) : this.ttl;
+      var maxAge = sess.cookie.maxAge || sess.cookie.originalMaxAge;
 
+      if (!sess.__expires__) sess.__expires__ = Date.now() + maxAge;
       sess = JSON.stringify(sess);
 
       this.client.set(sid, sess, function() {
         fn && fn.apply(this, arguments);
-      }, ttl);
+      }, this.ttl);
     } catch (err) { fn && fn(err); }
   };
 
