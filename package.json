@@ -1,0 +1,23 @@
+{
+  "name": "connect-memcache",
+  "version": "0.0.1",
+  "description": "Connect session with memcached",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/suprMax/connect-memcache.git"
+  },
+  "keywords": [
+    "session",
+    "express"
+  ],
+  "dependencies": {
+    "memcache":             "~0.3.0"
+  },
+  "author": "suprMax",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/suprMax/connect-memcache/issues"
+  }
+}
