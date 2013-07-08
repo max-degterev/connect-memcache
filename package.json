@@ -14,7 +14,7 @@
   "dependencies": {
     "memcache":             "~0.3.0"
   },
-  "author": "suprMax",
+  "author": "suprmax",
   "license": "BSD",
   "readmeFilename": "README.md",
   "bugs": {
