@@ -38,6 +38,7 @@ var memcache = require('memcache');
  */
 
 module.exports = function(connect) {
+
   /**
    * Connect's Store.
    */
@@ -52,13 +53,12 @@ module.exports = function(connect) {
    */
 
   var MemcacheStore = function(options) {
-    var _this = this;
     Store.call(this, options);
-
     options = extend(options || {}, defaults);
 
-    this.prefix = null || options.prefix;
+    this.prefix = options.prefix;
     this.ttl = options.ttl;
+    this.client = options.client;
 
     if (!this.client) {
       this.client = new memcache.Client(options.port, options.host, options);
@@ -91,7 +91,7 @@ module.exports = function(connect) {
       var sess;
 
       try {
-        sess = JSON.parse(data.toString());
+        sess = JSON.parse(data + '');
       } catch (err) { fn(err); }
 
       if (sess && sess.__expires__ && sess.__expires__ > Date.now() + _this.ttl * 1000) {
