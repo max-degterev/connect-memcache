@@ -2,7 +2,8 @@
  * connect-memcache
  * Based on plugin by TJ Holowaychuk <tj@vision-media.ca>,
  * copied w/o much success by Michał Thoma <michal@balor.pl>
- * MIT Licensed
+ * Fixed by Max Degterev @suprMax <me@maxdegterev.name>
+ * BSD Licensed
  */
 
 var extend = function(result, source) {
