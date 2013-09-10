@@ -137,10 +137,12 @@ module.exports = function(connect) {
     sid = this.prefix + sid;
     this.client.delete(sid, fn);
   };
+
+  return MemcacheStore;
 };
 
 /**
  * Library version.
  */
 
-module.exports.version = '0.0.4';
+module.exports.version = '0.0.5';
