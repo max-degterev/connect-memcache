@@ -137,23 +137,10 @@ module.exports = function(connect) {
     sid = this.prefix + sid;
     this.client.delete(sid, fn);
   };
-
-  /**
-   * Fetch number of sessions.
-   *
-   * @param {Function} fn
-   * @api public
-   */
-
-  MemcacheStore.prototype.length = function(fn) {
-    this.client.stats('items', fn);
-  };
-
-  return MemcacheStore;
 };
 
 /**
  * Library version.
  */
 
-module.exports.version = '0.0.3';
+module.exports.version = '0.0.4';

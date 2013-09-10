@@ -1,6 +1,6 @@
 {
   "name": "connect-memcache",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Connect session with memcached",
   "main": "index.js",
   "repository": {
